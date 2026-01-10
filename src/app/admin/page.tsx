@@ -12,7 +12,7 @@ export default function AdminControl() {
       if (member.id === id) {
         const newStatus = member.status === 'Active' ? 'FIRED' : 'Active';
         
-        // FIX: This line now correctly tells the "Bouncer" (Middleware) to block access
+        // This sets the security cookie that the middleware checks
         document.cookie = `isStaffFired=${newStatus === 'FIRED' ? 'true' : 'false'}; path=/`;
         
         return { ...member, status: newStatus };
@@ -22,25 +22,34 @@ export default function AdminControl() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-[#d4af37] p-10">
+    <div className="min-h-screen bg-neutral-950 text-[#d4af37] p-10 font-sans">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-black text-white uppercase tracking-tight mb-8">Panthers FC: Command Center</h1>
+        <header className="mb-10 border-b border-[#d4af37]/20 pb-6">
+          <h1 className="text-3xl font-black text-white uppercase tracking-tight">Panthers FC: Command Center</h1>
+          <p className="text-gray-500 italic text-sm">Real-time Personnel Access Management</p>
+        </header>
         
         <div className="grid gap-6">
           {staff.map(member => (
-            <div key={member.id} className="bg-neutral-900 p-6 rounded-lg flex justify-between items-center border border-neutral-800">
+            <div key={member.id} className="bg-neutral-900 p-6 rounded-lg flex justify-between items-center border border-neutral-800 shadow-xl">
               <div>
-                <p className="text-xl font-bold text-white">{member.name}</p>
-                {/* FIX: Added missing backticks and template literal for colors */}
-                <p className={`text-xs font-mono font-bold ${member.status === 'Active' ? 'text-green-500' : 'text-red-600'}`}>
-                  STATUS: {member.status}
-                </p>
+                <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-1 font-bold">{member.dept} Dept</p>
+                <p className="text-xl font-bold text-white tracking-tight">{member.name}</p>
+                <div className="flex items-center mt-2">
+                  <span className={`h-2 w-2 rounded-full mr-2 ${member.status === 'Active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-600'}`}></span>
+                  <p className={`text-xs font-mono font-bold ${member.status === 'Active' ? 'text-green-500' : 'text-red-600'}`}>
+                    SYSTEM ACCESS: {member.status}
+                  </p>
+                </div>
               </div>
               
               <button 
                 onClick={() => toggleAccess(member.id)}
-                {/* FIX: Added missing backticks for the button styling */}
-                className={`px-6 py-2 rounded text-xs font-black ${member.status === 'Active' ? 'bg-red-600 text-white' : 'bg-[#d4af37] text-black'}`}
+                className={`px-6 py-2 rounded text-xs font-black tracking-widest transition-all duration-300 ${
+                  member.status === 'Active' 
+                  ? 'bg-red-600/10 text-red-500 border border-red-600 hover:bg-red-600 hover:text-white' 
+                  : 'bg-[#d4af37] text-black hover:bg-white'
+                }`}
               >
                 {member.status === 'Active' ? 'FIRE STAFF' : 'RE-HIRE'}
               </button>
