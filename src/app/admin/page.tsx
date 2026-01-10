@@ -80,6 +80,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
             ))}
+            <a href="/admin/complaints" className="bg-neutral-800/50 p-4 rounded-xl text-center text-xs font-bold uppercase hover:border-[#d4af37] border border-transparent transition-all">
+  View Intelligence & Feedback
+</a>
             
             {/* NAVIGATION LINKS */}
             <div className="md:col-span-3 mt-4 grid md:grid-cols-3 gap-4">
