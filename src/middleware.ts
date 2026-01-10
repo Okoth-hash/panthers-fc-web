@@ -2,13 +2,12 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // This is where we will link your "FIRE" button status.
-  // If set to true, the user is blocked from Technical data.
-  const isStaffFired = false; 
+  // READS THE LOCK STATUS FROM THE ADMIN PANEL
+  const isStaffFired = request.cookies.get('isStaffFired')?.value === 'true';
 
   if (request.nextUrl.pathname.startsWith('/technical')) {
     if (isStaffFired) {
-      // Send them back to the Vision/Mission page if they are fired
+      // REDIRECT TO HOME IF FIRED
       return NextResponse.redirect(new URL('/', request.url))
     }
   }
