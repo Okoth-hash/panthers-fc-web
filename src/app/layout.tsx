@@ -1,18 +1,9 @@
 import "./globals.css";
 
-export const metadata = {
-  title: "Panthers FC | Join The Hunt",
-  description: "Elite Football Management System",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-black text-white antialiased">
+      <body style={{ margin: 0, padding: 0, backgroundColor: "black" }}>
         {children}
       </body>
     </html>
