@@ -1,16 +1,21 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import PantherLogo from '../../components/PantherLogo';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [isLocked, setIsLocked] = useState(false);
-  const [systemTime, setSystemTime] = useState(new Date().toLocaleTimeString());
+  const [systemTime, setSystemTime] = useState("");
 
-  // Update clock and sync with security cookie
+  // Update clock and sync with security cookie on mount
   useEffect(() => {
+    setSystemTime(new Date().toLocaleTimeString());
     const timer = setInterval(() => setSystemTime(new Date().toLocaleTimeString()), 1000);
+    
     const cookieValue = document.cookie.split('; ').find(row => row.startsWith('isStaffFired='));
     if (cookieValue?.split('=')[1] === 'true') setIsLocked(true);
+    
     return () => clearInterval(timer);
   }, []);
 
@@ -18,6 +23,12 @@ export default function AdminDashboard() {
     const newState = !isLocked;
     setIsLocked(newState);
     document.cookie = `isStaffFired=${newState}; path=/`;
+  };
+
+  const handleLogout = () => {
+    // Terminate session by expiring the cookie
+    document.cookie = "staff_access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    router.push('/');
   };
 
   const departments = [
@@ -48,7 +59,7 @@ export default function AdminDashboard() {
         <div className="grid lg:grid-cols-3 gap-8">
           
           {/* SECURITY STATUS CARD */}
-          <section className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 flex flex-col justify-between">
+          <section className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 flex flex-col justify-between shadow-2xl">
             <div>
               <h2 className="text-xs font-black uppercase text-gray-500 tracking-[0.2em] mb-6">Security Protocol</h2>
               <div className={`text-4xl font-black mb-4 ${isLocked ? 'text-red-600' : 'text-green-500'}`}>
@@ -66,32 +77,50 @@ export default function AdminDashboard() {
             </button>
           </section>
 
-          {/* DEPARTMENT SUMMARIES */}
-          <section className="lg:col-span-2 grid md:grid-cols-3 gap-4">
-            {departments.map((dept, i) => (
-              <div key={i} className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl flex flex-col justify-between hover:border-[#d4af37]/30 transition-all">
-                <div>
-                  <h3 className="text-xs font-bold uppercase text-gray-500 mb-4">{dept.name}</h3>
-                  <p className={`text-lg font-black ${dept.color}`}>{dept.metric}</p>
+          {/* DEPARTMENT SUMMARIES & NAV */}
+          <section className="lg:col-span-2 space-y-4">
+            <div className="grid md:grid-cols-3 gap-4">
+              {departments.map((dept, i) => (
+                <div key={i} className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl flex flex-col justify-between hover:border-[#d4af37]/30 transition-all">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase text-gray-500 mb-4">{dept.name}</h3>
+                    <p className={`text-lg font-black ${dept.color}`}>{dept.metric}</p>
+                  </div>
+                  <div className="mt-6 flex justify-between items-center">
+                    <span className="text-[10px] font-mono text-gray-400">{dept.status}</span>
+                    <div className={`w-2 h-2 rounded-full ${isLocked && (dept.name === 'Technical' || dept.name === 'Medical') ? 'bg-red-600' : 'bg-green-500'}`}></div>
+                  </div>
                 </div>
-                <div className="mt-6 flex justify-between items-center">
-                  <span className="text-[10px] font-mono text-gray-400">{dept.status}</span>
-                  <div className={`w-2 h-2 rounded-full ${isLocked && (dept.name === 'Technical' || dept.name === 'Medical') ? 'bg-red-600' : 'bg-green-500'}`}></div>
-                </div>
+              ))}
+            </div>
+
+            {/* ACTION LINKS */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <a href="/admin/complaints" className="bg-neutral-800/50 p-6 rounded-2xl text-center text-xs font-bold uppercase hover:border-[#d4af37] border border-transparent transition-all group">
+                <span className="block text-[#d4af37] mb-1 group-hover:scale-110 transition-transform">Intelligence Feed</span>
+                View Feedback & Credentials
+              </a>
+              <div className="grid grid-cols-2 gap-4">
+                <a href="/technical" className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-xl text-center text-[10px] font-black uppercase hover:bg-neutral-800 transition-all flex items-center justify-center">Technical</a>
+                <a href="/medical" className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-xl text-center text-[10px] font-black uppercase hover:bg-neutral-800 transition-all flex items-center justify-center">Medical</a>
+                <a href="/" className="col-span-2 bg-[#d4af37] text-black p-4 rounded-xl text-center text-xs font-black uppercase hover:bg-white transition-all">Return to Public Site</a>
               </div>
-            ))}
-            <a href="/admin/complaints" className="bg-neutral-800/50 p-4 rounded-xl text-center text-xs font-bold uppercase hover:border-[#d4af37] border border-transparent transition-all">
-  View Intelligence & Feedback
-</a>
-            
-            {/* NAVIGATION LINKS */}
-            <div className="md:col-span-3 mt-4 grid md:grid-cols-3 gap-4">
-              <a href="/technical" className="bg-neutral-800/50 p-4 rounded-xl text-center text-xs font-bold uppercase hover:bg-neutral-700 transition-all">Go to Technical</a>
-              <a href="/medical" className="bg-neutral-800/50 p-4 rounded-xl text-center text-xs font-bold uppercase hover:bg-neutral-700 transition-all">Go to Medical</a>
-              <a href="/" className="bg-[#d4af37] text-black p-4 rounded-xl text-center text-xs font-bold uppercase hover:bg-white transition-all">Public Home</a>
             </div>
           </section>
         </div>
+
+        {/* LOGOUT FOOTER */}
+        <footer className="mt-12 flex justify-end border-t border-neutral-800 pt-8">
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-gray-500 hover:text-red-600 transition-colors text-[10px] font-black uppercase tracking-[0.2em]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Terminate Session
+          </button>
+        </footer>
       </div>
     </div>
   );

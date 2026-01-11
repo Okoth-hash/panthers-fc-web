@@ -1,20 +1,53 @@
-export default function TechnicalPage() {
+"use client"
+import React from "react";
+import PantherLogo from "../components/PantherLogo";
+import ClubNews from "../components/ClubNews";
+import LiveTicker from "../components/LiveTicker";
+
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-10">
-      <h1 className="text-3xl font-black uppercase italic border-b border-[#d4af37] pb-4 mb-8">
-        Technical Command
-      </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-neutral-900 p-6 rounded-xl border border-neutral-800">
-          <h3 className="text-[#d4af37] font-bold mb-2">Tactical Board</h3>
-          <p className="text-sm text-gray-400">Formation: 4-3-3 Attack</p>
+    <main className="bg-black min-h-screen text-white font-sans selection:bg-[#d4af37] selection:text-black">
+      {/* HERO SECTION */}
+      <nav className="p-6 flex justify-between items-center border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <PantherLogo className="w-10 h-10" />
+          <span className="font-black uppercase tracking-tighter text-xl italic">Panthers FC</span>
         </div>
-        <div className="bg-neutral-900 p-6 rounded-xl border border-neutral-800">
-          <h3 className="text-[#d4af37] font-bold mb-2">Scouting Reports</h3>
-          <p className="text-sm text-gray-400">3 New Players Identified</p>
+        <div className="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-widest">
+          <a href="/history" className="hover:text-[#d4af37] transition-colors">History</a>
+          <a href="/contact" className="hover:text-[#d4af37] transition-colors">Contact</a>
+          <a href="/login" className="text-[#d4af37] border border-[#d4af37] px-4 py-1 rounded-full hover:bg-[#d4af37] hover:text-black transition-all">Staff Login</a>
         </div>
-      </div>
-      <a href="/" className="inline-block mt-10 text-xs text-gray-500 hover:text-white">← BACK</a>
-    </div>
+      </nav>
+
+      <section className="py-24 px-6 text-center">
+        <h2 className="text-[#d4af37] text-xs font-mono tracking-[0.5em] uppercase mb-4">Established 2026</h2>
+        <h1 className="text-6xl md:text-8xl font-black uppercase italic leading-none mb-8 tracking-tighter">
+          JOIN THE <br /> <span className="text-[#d4af37]">HUNT.</span>
+        </h1>
+        <p className="max-w-xl mx-auto text-gray-400 text-sm md:text-base leading-relaxed mb-12">
+          From the heart of the pitch to the digital frontier. Experience the evolution of 
+          football management and tactical excellence with Panthers FC.
+        </p>
+        
+        <div className="flex flex-col md:flex-row justify-center gap-4">
+          <a href="/contact" className="bg-white text-black px-10 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:bg-[#d4af37] transition-all">
+            Join the Academy
+          </a>
+          <a href="/history" className="bg-neutral-900 border border-neutral-800 text-white px-10 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:border-[#d4af37] transition-all">
+            Our Legacy
+          </a>
+        </div>
+      </section>
+
+      {/* CLUB NEWS SECTION */}
+      <ClubNews />
+
+      {/* SPACER FOR TICKER */}
+      <div className="h-20"></div>
+
+      {/* LIVE STATS TICKER */}
+      <LiveTicker />
+    </main>
   );
 }
