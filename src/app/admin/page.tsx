@@ -5,6 +5,7 @@ import SecurityShield from "../../components/SecurityShield";
 import FaceScanner from "../../components/FaceScanner";
 import LiveTicker from "../../components/LiveTicker";
 import SystemHealth from "../../components/SystemHealth";
+import TerminalLogs from "../../components/TerminalLogs";
 
 interface StaffMember {
   name: string;
@@ -26,7 +27,7 @@ export default function DigitalAdmin() {
   return (
     <div className="min-h-screen bg-black text-white p-6 font-mono pb-32">
       <div className="flex justify-between items-center border-b border-white/10 pb-6 mb-10">
-        <h1 className="text-3xl font-black italic uppercase italic">Panther<span className="text-[#d4af37]">OS</span></h1>
+        <h1 className="text-3xl font-black italic uppercase">Panther<span className="text-[#d4af37]">OS</span></h1>
         <div className="flex gap-4">
           <Link href="/admin/manage" className="bg-[#d4af37] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase">Recruit</Link>
           <Link href="/" className="text-[10px] text-gray-500 border border-white/10 px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all font-bold">EXIT</Link>
@@ -56,10 +57,7 @@ export default function DigitalAdmin() {
         
         <div className="lg:col-span-1">
           <SystemHealth />
-          <div className="mt-6 p-6 border border-white/5 rounded-[2rem] bg-zinc-950">
-             <p className="text-[9px] text-[#d4af37] font-black uppercase mb-2">Global Uplink</p>
-             <p className="text-[10px] text-gray-500 leading-relaxed uppercase">Secure connection established with Vercel Edge. All biometric data is encrypted via Panther-Shield-v4.</p>
-          </div>
+          <TerminalLogs />
         </div>
       </div>
 
