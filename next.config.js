@@ -1,6 +1,9 @@
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ["localhost", "local-origin.dev", "*.local-origin.dev"],
+  // Removing the invalid experimental key to stop the warning
+  devIndicators: {
+    appIsrStatus: false,
+  },
 };
 
 module.exports = nextConfig;
