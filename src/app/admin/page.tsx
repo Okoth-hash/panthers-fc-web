@@ -1,45 +1,52 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import SecurityShield from "../../components/SecurityShield";
 
-export default function AdminDashboard() {
-  const departments = [
-    { name: "Technical", id: "tech", color: "from-blue-600", icon: "" },
-    { name: "Medical", id: "med", color: "from-red-600", icon: "" },
-    { name: "General Admin", id: "adm", color: "from-amber-600", icon: "" }
+export default function DigitalAdmin() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const depts = [
+    { name: "Technical", icon: "", color: "blue" },
+    { name: "Medical", icon: "", color: "red" },
+    { name: "Scouting", icon: "", color: "green" },
+    { name: "Intelligence", icon: "", color: "amber" }
   ];
 
+  if (!isAuthenticated) return <SecurityShield onComplete={() => setIsAuthenticated(true)} />;
+
   return (
-    <div className="min-h-screen bg-black text-white p-6 md:p-12 font-sans">
-      <div className="border-b-4 border-[#d4af37] mb-12 pb-6">
-        <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">Command Center</h1>
-        <p className="text-[#d4af37] text-sm md:text-xl font-bold tracking-[0.3em]">PANTHER ELITE ACCESS</p>
+    <div className="min-h-screen bg-black text-white p-6 font-mono">
+      <div className="flex justify-between items-center border-b border-[#d4af37]/30 pb-6 mb-10">
+        <h1 className="text-3xl font-black italic uppercase">Panther<span className="text-[#d4af37]">OS</span></h1>
+        <span className="text-[10px] text-green-500 font-bold uppercase tracking-widest animate-pulse"> System Encrypted</span>
       </div>
 
-      <div className="space-y-8">
-        {departments.map((dept) => (
-          <div key={dept.id} className="bg-zinc-900/80 border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row items-center gap-6 md:gap-10">
-            <div className={`bg-gradient-to-br ${dept.color} to-black w-full lg:w-72 p-6 md:p-8 rounded-2xl shadow-xl`}>
-              <span className="text-4xl mb-2 block">{dept.icon}</span>
-              <h2 className="text-2xl font-black uppercase italic">{dept.name}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {depts.map((d) => (
+          <div key={d.name} className="bg-zinc-900/30 border border-white/5 p-6 rounded-2xl backdrop-blur-sm">
+            <div className="flex gap-4 items-center mb-6">
+              <span className="text-3xl">{d.icon}</span>
+              <h2 className="text-xl font-bold uppercase">{d.name}</h2>
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full">
-              <Link href="/admin/manage" className="bg-emerald-600 hover:bg-emerald-400 text-white font-black py-6 md:py-8 rounded-xl uppercase text-[10px] md:text-xs text-center shadow-lg transition-all active:scale-95">
-                 Credentials
-              </Link>
-              <Link href="/admin/manage" className="bg-rose-700 hover:bg-rose-500 text-white font-black py-6 md:py-8 rounded-xl uppercase text-[10px] md:text-xs text-center shadow-lg transition-all active:scale-95">
-                 Delete
-              </Link>
-              <Link href="/admin/stats" className="bg-sky-600 hover:bg-sky-400 text-white font-black py-6 md:py-8 rounded-xl uppercase text-[10px] md:text-xs text-center shadow-lg transition-all active:scale-95">
-                 View Feed
-              </Link>
-              <Link href="/admin/reply" className="bg-[#d4af37] hover:bg-white text-black font-black py-6 md:py-8 rounded-xl uppercase text-[10px] md:text-xs text-center shadow-lg transition-all active:scale-95">
-                 Reply
-              </Link>
+            <div className="grid grid-cols-2 gap-2">
+              <Link href="/admin/manage" className="bg-zinc-800 hover:bg-emerald-600 p-4 rounded-xl text-[10px] font-bold uppercase text-center transition-all">Credentials</Link>
+              <Link href="/admin/manage" className="bg-zinc-800 hover:bg-rose-700 p-4 rounded-xl text-[10px] font-bold uppercase text-center transition-all">Database</Link>
+              <Link href="/admin/stats" className="bg-zinc-800 hover:bg-sky-600 p-4 rounded-xl text-[10px] font-bold uppercase text-center transition-all">Live Feed</Link>
+              <Link href="/admin/reply" className="bg-zinc-800 hover:bg-[#d4af37] hover:text-black p-4 rounded-xl text-[10px] font-bold uppercase text-center transition-all">Dispatch</Link>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* SYSTEM LOG FOOTER */}
+      <div className="bg-zinc-950 border border-[#d4af37]/20 p-4 rounded-xl">
+        <h3 className="text-[10px] font-bold text-[#d4af37] mb-3 uppercase tracking-widest">Digital Activity Log</h3>
+        <div className="text-[9px] space-y-1 text-gray-500 uppercase">
+          <p>[11:42:01] - Security handshake successful</p>
+          <p>[11:42:05] - Admin logged in from local terminal</p>
+          <p className="text-[#d4af37]/60 animate-pulse">[WAITING] - Monitoring incoming encrypted data...</p>
+        </div>
       </div>
     </div>
   );
