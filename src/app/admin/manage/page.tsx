@@ -1,40 +1,34 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 
-export default function DepartmentManagement() {
+export default function ManagementHub() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-8">
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-black italic uppercase text-[#d4af37]">Management Hub</h1>
-        <a href="/admin" className="text-xs font-bold border border-white/20 px-4 py-2 rounded uppercase">Back to Command</a>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {/* SECTION 1: CREDENTIALS */}
-        <div className="bg-zinc-900 border border-white/10 p-6 rounded-xl">
-          <h3 className="text-xl font-bold uppercase mb-4 text-green-500">Staff Credentials</h3>
-          <div className="space-y-4">
-            <input className="w-full bg-black border border-white/10 p-3 rounded" placeholder="Staff Name..." />
-            <input className="w-full bg-black border border-white/10 p-3 rounded" placeholder="Role/Level..." />
-            <div className="flex gap-2">
-              <button className="flex-1 bg-green-600 p-3 font-black uppercase text-xs rounded">Authorize Staff</button>
-              <button className="flex-1 bg-red-900 p-3 font-black uppercase text-xs rounded">Revoke Access</button>
-            </div>
+    <div className="min-h-screen bg-black text-white p-8 font-mono flex flex-col items-center">
+      <div className="w-full max-w-2xl bg-zinc-900/50 border border-[#d4af37]/30 rounded-[40px] p-10 backdrop-blur-md">
+        <h1 className="text-3xl font-black uppercase italic text-[#d4af37] mb-2">Personnel Intake</h1>
+        <p className="text-[10px] text-gray-500 uppercase tracking-[0.4em] mb-10">Departmental Hiring Protocol</p>
+        
+        <div className="space-y-6">
+          <div>
+            <label className="text-[10px] text-[#d4af37] uppercase font-bold tracking-widest">Full Name</label>
+            <input className="w-full bg-black border border-white/10 p-4 rounded-xl mt-2 outline-none focus:border-green-500 transition-all" placeholder="Enter Recruit Name..." />
           </div>
-        </div>
 
-        {/* SECTION 2: COMMENTS & REPLIES */}
-        <div className="bg-zinc-900 border border-white/10 p-6 rounded-xl">
-          <h3 className="text-xl font-bold uppercase mb-4 text-blue-500">Intel Feed (Comments)</h3>
-          <div className="bg-black/50 p-4 rounded mb-4 border-l-4 border-[#d4af37]">
-            <p className="text-sm italic">"Training kits are wearing out." - Marcus Stone</p>
-            <div className="mt-3 flex gap-4">
-               <button className="text-[10px] font-bold text-blue-400 uppercase">View Details</button>
-               <button className="text-[10px] font-bold text-[#d4af37] uppercase">Send Reply</button>
-            </div>
+          <div>
+            <label className="text-[10px] text-[#d4af37] uppercase font-bold tracking-widest">Target Department</label>
+            <select className="w-full bg-black border border-white/10 p-4 rounded-xl mt-2 outline-none focus:border-green-500">
+              <option>Technical</option>
+              <option>Medical</option>
+              <option>Scouting</option>
+              <option>Intelligence</option>
+            </select>
           </div>
-          <textarea className="w-full bg-black border border-white/10 p-3 rounded h-24 mt-2" placeholder="Write a response..."></textarea>
-          <button className="w-full bg-[#d4af37] text-black font-black p-3 mt-2 uppercase text-xs rounded">Broadcast Reply</button>
+
+          <div className="pt-6 grid grid-cols-2 gap-4">
+            <button className="bg-green-600 hover:bg-green-400 text-black font-black py-4 rounded-2xl uppercase italic">Confirm Hire</button>
+            <Link href="/admin" className="bg-zinc-800 text-center py-4 rounded-2xl uppercase font-bold hover:bg-zinc-700">Cancel</Link>
+          </div>
         </div>
       </div>
     </div>
