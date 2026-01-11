@@ -1,52 +1,71 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import SecurityShield from "../../components/SecurityShield";
 import FaceScanner from "../../components/FaceScanner";
-import SelfDestruct from "../../components/SelfDestruct";
+
+// This interface fixes the red ts(2339) errors
+interface StaffMember {
+  name: string;
+  dept: string;
+}
 
 export default function DigitalAdmin() {
   const [step, setStep] = useState("face-id");
-  const [isPurging, setIsPurging] = useState(false);
+  const [staffData, setStaffData] = useState<StaffMember[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("panther_staff");
+    if (saved) setStaffData(JSON.parse(saved));
+  }, []);
 
   if (step === "face-id") return <FaceScanner onComplete={() => setStep("security")} />;
   if (step === "security") return <SecurityShield onComplete={() => setStep("dashboard")} />;
   
   return (
     <div className="min-h-screen bg-black text-white p-6 font-mono">
-      {isPurging && <SelfDestruct onConfirm={() => setIsPurging(false)} onCancel={() => setIsPurging(false)} />}
-      
       <div className="flex justify-between items-center border-b border-white/10 pb-6 mb-10">
-        <div>
-          <h1 className="text-3xl font-black italic uppercase">Panther<span className="text-[#d4af37]">OS</span></h1>
-          <p className="text-[9px] text-green-500 font-bold uppercase tracking-widest"> Database Initialized (Empty)</p>
-        </div>
-        <div className="text-right">
-           <Link href="/" className="text-[10px] bg-red-900/20 text-red-500 border border-red-500/30 px-3 py-1 rounded-full hover:bg-red-600 hover:text-white transition-all">LOGOUT</Link>
-        </div>
+        <h1 className="text-3xl font-black italic uppercase">Panther<span className="text-[#d4af37]">OS</span></h1>
+        <Link href="/admin/manage" className="bg-[#d4af37] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase">Hire New</Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {["Technical", "Medical", "Scouting", "Intelligence"].map((dept) => (
-          <div key={dept} className="relative group bg-zinc-900/20 border border-white/5 p-8 rounded-[3rem] hover:bg-zinc-900/40 transition-all">
-            <div className="flex justify-between items-start mb-6">
-              <h2 className="text-2xl font-black uppercase text-gray-600 group-hover:text-white transition-colors italic">{dept}</h2>
-              <span className="text-[9px] bg-white/5 px-2 py-1 rounded text-gray-500 italic">0 RECORDS FOUND</span>
-            </div>
+        {["Technical", "Medical", "Scouting", "Intelligence"].map((deptName) => {
+          const deptStaff = staffData.filter(s => s.dept === deptName);
+          return (
+            <div key={deptName} className="bg-zinc-900/40 border border-white/5 p-8 rounded-[3rem]">
+              <div className="flex justify-between mb-6">
+                <h2 className="text-xl font-black uppercase text-gray-400">{deptName}</h2>
+                <span className="text-[10px] text-[#d4af37]">{deptStaff.length} RECRUITS</span>
+              </div>
 
-            {/* EMPTY STATE VISUAL */}
-            <div className="h-24 flex items-center justify-center border-2 border-dashed border-white/5 rounded-2xl mb-6">
-              <p className="text-[10px] text-gray-600 uppercase tracking-widest animate-pulse font-bold">Awaiting Department Head Input...</p>
-            </div>
+              <div className="min-h-[100px] mb-6 space-y-2">
+                {deptStaff.length === 0 ? (
+                  <div className="h-24 flex items-center justify-center border-2 border-dashed border-white/5 rounded-2xl">
+                    <p className="text-[9px] text-gray-700 uppercase">Empty</p>
+                  </div>
+                ) : (
+                  deptStaff.map((s, i) => (
+                    <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/10 flex justify-between">
+                      <span className="text-xs font-bold">{s.name}</span>
+                      <span className="text-[8px] text-green-500 uppercase">Verified</span>
+                    </div>
+                  ))
+                )}
+              </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <Link href="/admin/manage" className="bg-zinc-800/80 hover:bg-[#d4af37] hover:text-black p-4 rounded-2xl text-[10px] font-black uppercase text-center transition-all">Hire Staff</Link>
-              <button onClick={() => setIsPurging(true)} className="bg-zinc-800/80 hover:bg-rose-900 p-4 rounded-2xl text-[10px] font-black uppercase transition-all">Purge Logs</button>
-              <Link href="/admin/manage" className="bg-zinc-800/80 hover:bg-sky-600 p-4 rounded-2xl text-[10px] font-black uppercase text-center transition-all">Add Data</Link>
-              <Link href="/admin/reply" className="bg-zinc-800/80 hover:bg-emerald-600 p-4 rounded-2xl text-[10px] font-black uppercase text-center transition-all">Broadcast</Link>
+              <div className="flex gap-2">
+                <Link href="/admin/manage" className="flex-1 bg-zinc-800 p-3 rounded-xl text-[10px] text-center font-bold">RECRUIT</Link>
+                <button 
+                  onClick={() => {localStorage.removeItem("panther_staff"); window.location.reload();}}
+                  className="flex-1 bg-red-900/20 text-red-500 p-3 rounded-xl text-[10px] font-bold"
+                >
+                  WIPE
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
